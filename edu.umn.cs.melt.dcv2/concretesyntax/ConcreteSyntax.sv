@@ -54,14 +54,14 @@ top::Expr_c ::= e::Expr_c '-' t::Term_c
 }
 
 concrete production mul_c
-top::Expr_c ::= t::Term_c '*' f::Factor_c
+top::Term_c ::= t::Term_c '*' f::Factor_c
 {
   top.pp = parens(ppImplode(text(" * "), [t.pp, f.pp]));
   top.ast_Expr = mul(t.ast_Expr, f.ast_Expr);
 }
 
 concrete production div_c
-top::Expr_c ::= t::Term_c '/' f::Factor_c
+top::Term_c ::= t::Term_c '/' f::Factor_c
 {
   top.pp = parens(ppImplode(text(" / "), [t.pp, f.pp]));
   top.ast_Expr = div(t.ast_Expr, f.ast_Expr);
