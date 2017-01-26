@@ -27,8 +27,8 @@ IOVal<Integer> ::= args::[String] ioIn::IO
         return 2;
       } else {
         ast::Root = result.parseTree.ast_Root;
-        printM("pp: " ++ ast.pp.result);
-        printM("value: " ++ toString(ast.value));
+        printM("pp: " ++ ast.pp.result ++ "\n");
+        printM("value: " ++ toString(ast.value) ++ "\n");
         return 0;
       }
     }
