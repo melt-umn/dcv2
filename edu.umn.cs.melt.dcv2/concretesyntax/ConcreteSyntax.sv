@@ -6,15 +6,32 @@ import silver:langutil:pp with implode as ppImplode;
 
 -- The root nonterminal and associated attributes.
 
-nonterminal Root_c with ast_Root, location, pp;
+closed nonterminal Root_c with ast_Root, bindings, location, pp;
 
 synthesized attribute ast_Root::Root;
+synthesized attribute bindings::[Pair<String Expr>];
 
-concrete production root_c
-top::Root_c ::= e::Expr_c
+concrete productions top::Root_c
+|
+  { top.pp = notext();
+    top.bindings = [];
+    top.ast_Root = root(top.bindings, location=top.location); }
+| h::TopLevel_c t::Root_c
+  { top.pp = concat([h.pp, text("\n"), t.pp]);
+    top.bindings = h.binding :: t.bindings;
+    top.ast_Root = root(top.bindings, location=top.location); }
+
+-- The top-level expression nonterminal and production.
+
+nonterminal TopLevel_c with binding, location, pp;
+
+synthesized attribute binding::Pair<String Expr>;
+
+concrete production toplevel_c
+top::TopLevel_c ::= name::Identifier_t '=' value::Expr_c
 {
-  top.pp = e.pp;
-  top.ast_Root = root(e.ast_Expr, location=top.location);
+  top.pp = concat([text(name.lexeme), text(" = "), value.pp]);
+  top.binding = pair(name.lexeme, value.ast_Expr);
 }
 
 -- The expression nonterminal.

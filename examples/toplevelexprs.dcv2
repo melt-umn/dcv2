@@ -1,0 +1,6 @@
+one = 1
+two = 2
+
+main = (one + two) * two * seven
+
+seven = 3 * two + one
