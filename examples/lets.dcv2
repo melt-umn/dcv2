@@ -1,6 +1,9 @@
 let foo = 0.20 in
-let bar = 1.00 in
-let baz = 0.03 in
-foo + bar + baz
+	let bar = 1.00 in
+		let baz = 0.03 in
+			foo + bar + baz
+		end
+	end
+end
 
 -- Should be 1.23

@@ -8,7 +8,6 @@ nonterminal Expr with env, errors, location, pp, value;
 
 inherited attribute env::[Pair<String Float>];
 synthesized attribute errors::[Message];
-synthesized attribute location::Location;
 synthesized attribute value::Float;
 
 abstract production root
@@ -24,6 +23,9 @@ top::Root ::= e::Expr
 abstract production add
 top::Expr ::= l::Expr r::Expr
 {
+  l.env = top.env;
+  r.env = top.env;
+  top.errors = l.errors ++ r.errors;
   top.pp = parens(ppImplode(text(" + "), [l.pp, r.pp]));
   top.value = l.value + r.value;
 }
@@ -31,6 +33,9 @@ top::Expr ::= l::Expr r::Expr
 abstract production sub
 top::Expr ::= l::Expr r::Expr
 {
+  l.env = top.env;
+  r.env = top.env;
+  top.errors = l.errors ++ r.errors;
   top.pp = parens(ppImplode(text(" - "), [l.pp, r.pp]));
   top.value = l.value - r.value;
 }
@@ -38,6 +43,9 @@ top::Expr ::= l::Expr r::Expr
 abstract production mul
 top::Expr ::= l::Expr r::Expr
 {
+  l.env = top.env;
+  r.env = top.env;
+  top.errors = l.errors ++ r.errors;
   top.pp = parens(ppImplode(text(" * "), [l.pp, r.pp]));
   top.value = l.value * r.value;
 }
@@ -45,6 +53,9 @@ top::Expr ::= l::Expr r::Expr
 abstract production div
 top::Expr ::= l::Expr r::Expr
 {
+  l.env = top.env;
+  r.env = top.env;
+  top.errors = l.errors ++ r.errors;
   top.pp = parens(ppImplode(text(" / "), [l.pp, r.pp]));
   top.value = l.value / r.value;
 }
@@ -54,6 +65,9 @@ top::Expr ::= l::Expr r::Expr
 abstract production binding
 top::Expr ::= ident::String value::Expr body::Expr
 {
+  value.env = top.env;
+  body.env = pair(ident, value.value) :: top.env;
+  top.errors = value.errors ++ body.errors;
   top.pp = parens(concat([
     text("let "),
     text(ident),
@@ -61,7 +75,7 @@ top::Expr ::= ident::String value::Expr body::Expr
     value.pp,
     text(" in "),
     body.pp]));
-  top.value = -1.0;
+  top.value = body.value; -- TODO
 }
 
 -- Literal and Identifier productions.
@@ -73,12 +87,13 @@ top::Expr ::= i::String
   top.errors = if binding.isJust then []
               else [err(top.location, "Unknown binding: " ++ i)];
   top.pp = text(i);
-  top.value = -1.0; -- TODO
+  top.value = binding.fromJust.snd;
 }
 
 abstract production literal
 top::Expr ::= l::String
 {
+  top.errors = [];
   top.pp = text(l);
   top.value = toFloat(l);
 }

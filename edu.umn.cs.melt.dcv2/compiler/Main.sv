@@ -4,7 +4,7 @@ import core:monad;
 import edu:umn:cs:melt:dcv2:abstractsyntax;
 import edu:umn:cs:melt:dcv2:concretesyntax;
 import silver:langutil;
-import silver:langutil:pp;
+import silver:langutil:pp with implode as ppImplode;
 
 parser parse::Root_c
 {
@@ -28,9 +28,21 @@ IOVal<Integer> ::= args::[String] ioIn::IO
       } else {
         ast::Root = result.parseTree.ast_Root;
         printM("pp: " ++ ast.pp.result ++ "\n");
-        printM("value: " ++ toString(ast.value) ++ "\n");
-        return 0;
+        if null(ast.errors) then {
+          printM("value: " ++ toString(ast.value) ++ "\n");
+          return 0;
+        } else {
+          printM("error: " ++ foldMessages(ast.errors));
+          return 1;
+        }
       }
     }
   }, ioIn);
+}
+
+-- TODO This might be moved to langutil.
+function foldMessages
+String ::= ms::[Message]
+{
+  return implode("\n", map((.output), ms)) ++ "\n";
 }
