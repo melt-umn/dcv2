@@ -3,14 +3,18 @@ grammar edu:umn:cs:melt:dcv2:abstractsyntax;
 import silver:langutil;
 import silver:langutil:pp with implode as ppImplode;
 
-nonterminal Root with pp, value;
-nonterminal Expr with pp, value;
+nonterminal Root with env, errors, location, pp, value;
+nonterminal Expr with env, errors, location, pp, value;
 
+inherited attribute env::[Pair<String Float>];
+synthesized attribute errors::[Message];
+synthesized attribute location::Location;
 synthesized attribute value::Float;
 
 abstract production root
 top::Root ::= e::Expr
 {
+  top.errors = e.errors;
   top.pp = e.pp;
   top.value = e.value;
 }
@@ -50,7 +54,13 @@ top::Expr ::= l::Expr r::Expr
 abstract production binding
 top::Expr ::= ident::String value::Expr body::Expr
 {
-  top.pp = text("LOL, TODO");
+  top.pp = parens(concat([
+    text("let "),
+    text(ident),
+    text(" = "),
+    value.pp,
+    text(" in "),
+    body.pp]));
   top.value = -1.0;
 }
 
@@ -59,6 +69,9 @@ top::Expr ::= ident::String value::Expr body::Expr
 abstract production identifier
 top::Expr ::= i::String
 {
+  local binding::Maybe<Pair<String Float>> = find(\p::Pair<String Float> -> p.fst == i, top.env);
+  top.errors = if binding.isJust then []
+              else [err(top.location, "Unknown binding: " ++ i)];
   top.pp = text(i);
   top.value = -1.0; -- TODO
 }

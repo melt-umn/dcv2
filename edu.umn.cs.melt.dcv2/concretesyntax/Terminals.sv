@@ -18,6 +18,7 @@ terminal RParen_t ')';
 terminal Let_t 'let' lexer classes {KEYWORD};
 terminal Bind_t '='  lexer classes {OPERATOR};
 terminal In_t 'in'   lexer classes {KEYWORD};
+terminal End_t 'end' lexer classes {KEYWORD};
 
 terminal Identifier_t /[A-Za-z][A-Za-z0-9]*/     lexer classes {IDENTIFIER};
 terminal Literal_t    /[\-]?[0-9]+([\.][0-9]*)?/ lexer classes {LITERAL};

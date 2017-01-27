@@ -12,7 +12,7 @@ concrete production root_c
 top::Root_c ::= e::Expr_c
 {
   top.pp = e.pp;
-  top.ast_Root = root(e.ast_Expr);
+  top.ast_Root = root(e.ast_Expr, env=[]);
 }
 
 synthesized attribute ast_Expr :: Expr;
@@ -69,10 +69,8 @@ top::Term_c ::= t::Term_c '/' f::Factor_c
 
 -- Concrete production for let expressions.
 
-{-
-
 concrete production let_c
-top::Expr_c ::= 'let' i::Identifier_t '=' value::Expr_c 'in' body::Expr_c
+top::Expr_c ::= 'let' i::Identifier_t '=' value::Expr_c 'in' body::Expr_c 'end'
 {
   local ident::String = i.lexeme;
   top.pp = parens(concat([
@@ -85,20 +83,18 @@ top::Expr_c ::= 'let' i::Identifier_t '=' value::Expr_c 'in' body::Expr_c
   top.ast_Expr = binding(ident, value.ast_Expr, body.ast_Expr);
 }
 
--}
-
 -- Literal and Identifier productions.
 
 concrete production identifier_c
 top::Factor_c ::= i::Identifier_t
 {
   top.pp = text(i.lexeme);
-  top.ast_Expr = identifier(i.lexeme);
+  top.ast_Expr = identifier(i.lexeme, location=i.location);
 }
 
 concrete production literal_c
 top::Factor_c ::= l::Literal_t
 {
   top.pp = text(l.lexeme);
-  top.ast_Expr = literal(l.lexeme);
+  top.ast_Expr = literal(l.lexeme, location=l.location);
 }
