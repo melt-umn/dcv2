@@ -85,7 +85,7 @@ top::Expr ::= i::String
 {
   local binding::Maybe<Pair<String Float>> = find(\p::Pair<String Float> -> p.fst == i, top.env);
   top.errors = if binding.isJust then []
-              else [err(top.location, "Unknown binding: " ++ i)];
+               else [err(top.location, "Unknown binding: " ++ i)];
   top.pp = text(i);
   top.value = binding.fromJust.snd;
 }
