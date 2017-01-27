@@ -32,17 +32,10 @@ IOVal<Integer> ::= args::[String] ioIn::IO
           printM("value: " ++ toString(ast.value) ++ "\n");
           return 0;
         } else {
-          printM("error: " ++ foldMessages(ast.errors));
+          printM(messagesToString(ast.errors) ++ "\n");
           return 1;
         }
       }
     }
   }, ioIn);
-}
-
--- TODO This might be moved to langutil.
-function foldMessages
-String ::= ms::[Message]
-{
-  return implode("\n", map((.output), ms)) ++ "\n";
 }

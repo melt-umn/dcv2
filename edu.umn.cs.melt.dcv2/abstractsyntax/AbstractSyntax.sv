@@ -13,6 +13,7 @@ synthesized attribute value::Float;
 abstract production root
 top::Root ::= e::Expr
 {
+  e.env = [];
   top.errors = e.errors;
   top.pp = e.pp;
   top.value = e.value;
@@ -75,7 +76,7 @@ top::Expr ::= ident::String value::Expr body::Expr
     value.pp,
     text(" in "),
     body.pp]));
-  top.value = body.value; -- TODO
+  top.value = body.value;
 }
 
 -- Literal and Identifier productions.
