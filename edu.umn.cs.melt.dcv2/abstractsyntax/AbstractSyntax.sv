@@ -61,6 +61,21 @@ top::Expr ::= l::Expr r::Expr
   top.value = l.value / r.value;
 }
 
+-- Semicolon production.
+
+-- TODO What is the point of this, actually, without having side-effects?
+-- TODO How to implement side-effects? Inherited attribute that's an IoMonad<Float>?
+-- TODO Name this `sequence`?
+abstract production semicolon
+top::Expr ::= l::Expr r::Expr
+{
+  l.env = top.env;
+  r.env = top.env;
+  top.errors = l.errors ++ r.errors;
+  top.pp = parens(ppImplode(text("; "), [l.pp, r.pp]));
+  top.value = r.value;
+}
+
 -- Let-expression production.
 
 abstract production binding

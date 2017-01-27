@@ -53,6 +53,15 @@ top::Expr_c ::= l::Expr_c '/' r::Expr_c
   top.ast_Expr = div(l.ast_Expr, r.ast_Expr, location=top.location);
 }
 
+-- Concrete production for semicolon-separated statements.
+
+concrete production semicolon_c
+top::Expr_c ::= l::Expr_c ';' r::Expr_c
+{
+  top.pp = parens(ppImplode(text("; "), [l.pp, r.pp]));
+  top.ast_Expr = semicolon(l.ast_Expr, r.ast_Expr, location=top.location);
+}
+
 -- Concrete production for let expressions.
 
 concrete production let_c

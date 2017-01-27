@@ -1,0 +1,2 @@
+let two = 1; 2 in two * 5; 13
+-- Should evaluate to 13.
