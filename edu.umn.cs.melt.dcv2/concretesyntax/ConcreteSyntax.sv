@@ -67,6 +67,13 @@ top::Term_c ::= t::Term_c '/' f::Factor_c
   top.ast_Expr = div(t.ast_Expr, f.ast_Expr, location=top.location);
 }
 
+concrete production parentheses_c
+top::Factor_c ::= '(' e::Expr_c ')'
+{
+  top.pp = parens(e.pp);
+  top.ast_Expr = e.ast_Expr;
+}
+
 -- Concrete production for let expressions.
 
 concrete production let_c
