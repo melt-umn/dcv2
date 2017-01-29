@@ -54,7 +54,7 @@ top::Expr_c ::= l::Expr_c '/' r::Expr_c
 }
 
 concrete production parentheses_c
-top::Factor_c ::= '(' e::Expr_c ')'
+top::Expr_c ::= '(' e::Expr_c ')'
 {
   top.pp = parens(e.pp);
   top.ast_Expr = e.ast_Expr;
