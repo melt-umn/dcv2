@@ -102,6 +102,27 @@ top::Expr_c ::= l::Expr_c '<=' r::Expr_c
   top.ast_Expr = lessThanEqualExpr(l.ast_Expr, r.ast_Expr, location=top.location);
 }
 
+concrete production and_c
+top::Expr_c ::= l::Expr_c '&&' r::Expr_c
+{
+  top.pp = parens(ppImplode(text(" && "), [l.pp, r.pp]));
+  top.ast_Expr = andExpr(l.ast_Expr, r.ast_Expr, location=top.location);
+}
+
+concrete production or_c
+top::Expr_c ::= l::Expr_c '||' r::Expr_c
+{
+  top.pp = parens(ppImplode(text(" || "), [l.pp, r.pp]));
+  top.ast_Expr = orExpr(l.ast_Expr, r.ast_Expr, location=top.location);
+}
+
+concrete production not_c
+top::Expr_c ::= '!' e::Expr_c 
+{
+  top.pp = parens(cat(text("!"), e.pp));
+  top.ast_Expr = notExpr(e.ast_Expr, location=top.location);
+}
+
 -- Concrete production for let and if-then-else expressions.
 
 concrete production let_c
@@ -139,6 +160,20 @@ top::Expr_c ::= i::Identifier_t
 {
   top.pp = text(i.lexeme);
   top.ast_Expr = identifier(i.lexeme, location=i.location);
+}
+
+concrete production true_c
+top::Expr_c ::= l::'true'
+{
+  top.pp = text(l.lexeme);
+  top.ast_Expr = boolLiteralExpr(true, location=l.location);
+}
+
+concrete production false_c
+top::Expr_c ::= l::'false'
+{
+  top.pp = text(l.lexeme);
+  top.ast_Expr = boolLiteralExpr(false, location=l.location);
 }
 
 concrete production float_literal_c

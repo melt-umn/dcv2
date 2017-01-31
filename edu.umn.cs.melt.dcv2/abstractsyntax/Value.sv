@@ -14,10 +14,7 @@ top::Value ::= val::Float
 abstract production booleanValue
 top::Value ::= val::Boolean
 {
-  top.pp = text(case val of
-    | true  -> "true"
-    | false -> "false"
-    end);
+  top.pp = text(toString(val));
 }
 
 function valueAsBoolean

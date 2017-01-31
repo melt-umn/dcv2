@@ -1,0 +1,3 @@
+let x = false in
+let y = true in
+(x || y) && !(x && y)

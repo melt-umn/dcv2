@@ -4,19 +4,14 @@ import silver:langutil;
 
 -- Either functions
 
-function allE
-Either<c b> ::= es::[Either<a b>] f::(c ::= [a])
+function bothE
+Either<Pair<a b> [c]> ::= x::Either<a [c]> y::Either<b [c]>
 {
-  return allEHelper(es, [], f);
-}
-
-function allEHelper
-Either<c b> ::= es::[Either<a b>] l::[a] f::(c ::= [a])
-{
-  return case es of
-  | [] -> left(f(l))
-  | left(x) :: rest -> allEHelper(rest, x::l, f)
-  | right(e) :: _ -> right(e)
+  return case pair(x, y) of
+  | pair(left(x), left(y))   -> left(pair(x, y))
+  | pair(left(x), right(y))  -> right(y)
+  | pair(right(x), left(y))  -> right(x)
+  | pair(right(x), right(y)) -> right(x ++ y)
   end;
 }
 
@@ -66,11 +61,29 @@ Maybe<a> ::= f::(Boolean ::= a) l::[a]
 
 -- Value functions
 
-function mathOp
-Either<Value [Message]> ::= l::[Value] f::(Float ::= Float Float) i::Float loc::Location
+function logOp
+Either<Value [Message]> ::= l::Value r::Value f::(Boolean ::= Boolean Boolean) loc::Location
 {
-  return case allE(map(\v::Value -> valueAsFloat(v, loc), l), \l::[Float] -> foldr(f, i, l)) of
-  | left(val) -> left(floatValue(val))
-  | right(e) -> right(e)
+  return case bothE(valueAsBoolean(l, loc), valueAsBoolean(r, loc)) of
+  | left(pair(l, r)) -> left(booleanValue(f(l, r)))
+  | right(errs) -> right(errs)
+  end;
+}
+
+function mathOp
+Either<Value [Message]> ::= l::Value r::Value f::(Float ::= Float Float) loc::Location
+{
+  return case bothE(valueAsFloat(l, loc), valueAsFloat(r, loc)) of
+  | left(pair(l, r)) -> left(floatValue(f(l, r)))
+  | right(errs) -> right(errs)
+  end;
+}
+
+function relOp
+Either<Value [Message]> ::= l::Value r::Value f::(Boolean ::= Float Float) loc::Location
+{
+  return case bothE(valueAsFloat(l, loc), valueAsFloat(r, loc)) of
+  | left(pair(l, r)) -> left(booleanValue(f(l, r)))
+  | right(errs) -> right(errs)
   end;
 }
