@@ -23,7 +23,7 @@ nonterminal Expr_c with ast_Expr, location, pp;
 
 synthesized attribute ast_Expr::Expr;
 
--- Concrete productions for all the mathematical operators.
+-- Concrete productions for all the infix operators.
 
 concrete production add_c
 top::Expr_c ::= l::Expr_c '+' r::Expr_c
@@ -60,7 +60,70 @@ top::Expr_c ::= '(' e::Expr_c ')'
   top.ast_Expr = e.ast_Expr;
 }
 
--- Concrete production for let expressions.
+concrete production equal_c
+top::Expr_c ::= l::Expr_c '==' r::Expr_c
+{
+  top.pp = parens(ppImplode(text(" == "), [l.pp, r.pp]));
+  top.ast_Expr = equalExpr(l.ast_Expr, r.ast_Expr, location=top.location);
+}
+
+concrete production notEqual_c
+top::Expr_c ::= l::Expr_c '!=' r::Expr_c
+{
+  top.pp = parens(ppImplode(text(" != "), [l.pp, r.pp]));
+  top.ast_Expr = notEqualExpr(l.ast_Expr, r.ast_Expr, location=top.location);
+}
+
+concrete production greaterThan_c
+top::Expr_c ::= l::Expr_c '>' r::Expr_c
+{
+  top.pp = parens(ppImplode(text(" > "), [l.pp, r.pp]));
+  top.ast_Expr = greaterThanExpr(l.ast_Expr, r.ast_Expr, location=top.location);
+}
+
+concrete production greaterThanEqual_c
+top::Expr_c ::= l::Expr_c '>=' r::Expr_c
+{
+  top.pp = parens(ppImplode(text(" >= "), [l.pp, r.pp]));
+  top.ast_Expr = greaterThanEqualExpr(l.ast_Expr, r.ast_Expr, location=top.location);
+}
+
+concrete production lessThan_c
+top::Expr_c ::= l::Expr_c '<' r::Expr_c
+{
+  top.pp = parens(ppImplode(text(" < "), [l.pp, r.pp]));
+  top.ast_Expr = lessThanExpr(l.ast_Expr, r.ast_Expr, location=top.location);
+}
+
+concrete production lessThanEqual_c
+top::Expr_c ::= l::Expr_c '<=' r::Expr_c
+{
+  top.pp = parens(ppImplode(text(" <= "), [l.pp, r.pp]));
+  top.ast_Expr = lessThanEqualExpr(l.ast_Expr, r.ast_Expr, location=top.location);
+}
+
+concrete production and_c
+top::Expr_c ::= l::Expr_c '&&' r::Expr_c
+{
+  top.pp = parens(ppImplode(text(" && "), [l.pp, r.pp]));
+  top.ast_Expr = andExpr(l.ast_Expr, r.ast_Expr, location=top.location);
+}
+
+concrete production or_c
+top::Expr_c ::= l::Expr_c '||' r::Expr_c
+{
+  top.pp = parens(ppImplode(text(" || "), [l.pp, r.pp]));
+  top.ast_Expr = orExpr(l.ast_Expr, r.ast_Expr, location=top.location);
+}
+
+concrete production not_c
+top::Expr_c ::= '!' e::Expr_c 
+{
+  top.pp = parens(cat(text("!"), e.pp));
+  top.ast_Expr = notExpr(e.ast_Expr, location=top.location);
+}
+
+-- Concrete production for let and if-then-else expressions.
 
 concrete production let_c
 top::Expr_c ::= 'let' i::Identifier_t '=' value::Expr_c 'in' body::Expr_c
@@ -73,7 +136,21 @@ top::Expr_c ::= 'let' i::Identifier_t '=' value::Expr_c 'in' body::Expr_c
     value.pp,
     text(" in "),
     body.pp]));
-  top.ast_Expr = binding(ident, value.ast_Expr, body.ast_Expr, location=top.location);
+  top.ast_Expr = letExpr(ident, value.ast_Expr, body.ast_Expr, location=top.location);
+}
+
+concrete production if_c
+top::Expr_c ::= 'if' c::Expr_c 'then' t::Expr_c 'else' e::Expr_c 'end'
+{
+  top.pp = parens(concat([
+    text("if "),
+    c.pp,
+    text(" then "),
+    t.pp,
+    text(" else "),
+    e.pp,
+    text(" end")]));
+  top.ast_Expr = ifExpr(c.ast_Expr, t.ast_Expr, e.ast_Expr, location=top.location);
 }
 
 -- Literal and Identifier productions.
@@ -85,9 +162,23 @@ top::Expr_c ::= i::Identifier_t
   top.ast_Expr = identifier(i.lexeme, location=i.location);
 }
 
-concrete production literal_c
-top::Expr_c ::= l::Literal_t
+concrete production true_c
+top::Expr_c ::= l::'true'
 {
   top.pp = text(l.lexeme);
-  top.ast_Expr = literal(l.lexeme, location=l.location);
+  top.ast_Expr = boolLiteralExpr(true, location=l.location);
+}
+
+concrete production false_c
+top::Expr_c ::= l::'false'
+{
+  top.pp = text(l.lexeme);
+  top.ast_Expr = boolLiteralExpr(false, location=l.location);
+}
+
+concrete production float_literal_c
+top::Expr_c ::= l::Float_Literal_t
+{
+  top.pp = text(l.lexeme);
+  top.ast_Expr = floatLiteralExpr(l.lexeme, location=l.location);
 }
