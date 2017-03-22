@@ -2,6 +2,6 @@
 !.gitignore
 
 build.xml
-dcv2.jar
-dcv2-monto.jar
+edu.umn.cs.melt.dcv2.compiler.jar
+edu.umn.cs.melt.dcv2.monto.jar
 Parser_edu_umn_cs_melt_dcv2_compiler_parse.copperdump.html
