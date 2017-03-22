@@ -1,5 +1,1 @@
-let foo = 2 + 2 in
-  if foo
-  then 3
-  elsa 5
-  end
+let foo = 2 + 2 in if foo then 3 elsa 5 end

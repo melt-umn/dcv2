@@ -1,10 +1,22 @@
 grammar edu:umn:cs:melt:dcv2:monto;
 
+import edu:umn:cs:melt:dcv2:abstractsyntax;
 import edu:umn:cs:melt:dcv2:compiler;
 import edu:umn:cs:melt:dcv2:concretesyntax;
 import lib:json;
 import lib:monto; 
 import lib:monto:helpers;
+
+global callbacks :: [Pair<String (Json ::= String String)>] =
+  [ pair("errors", errorCallback)
+  , pair("length", lengthCallback)
+  ];
+
+function callbackPairToName
+ProductDescription ::= p::Pair<String (Json ::= String String)>
+{
+  return productDescription("dcv2", p.fst);
+}
 
 function main
 IOVal<Integer> ::= args::[String] ioIn::IO
@@ -14,18 +26,10 @@ IOVal<Integer> ::= args::[String] ioIn::IO
     "edu.umn.cs.melt.dcv2",
     "dcv2",
     "A simple example language.",
-    [ sourceDependency("dcv2")
-    ],
-    [ productDescription("dcv2", "length")
-    , productDescription("dcv2", "errors")
-    ]);
+    [ sourceDependency("dcv2") ],
+    map(callbackPairToName, callbacks));
   return ioval(runMonto(cfg, callback, ioIn), 0);
 }
-
-global callbacks :: [Pair<String (Json ::= String String)>] =
-  [ pair("errors", errorCallback)
-  , pair("length", lengthCallback)
-  ];
 
 function callback
 [Product] ::= req::Request
@@ -56,7 +60,7 @@ Json ::= src::String fileName::String
              s)]
          | _ -> error("TODO")
          end
-    else []);
+    else map(messageToError, result.parseTree.ast_Root.errors));
 }
 
 function lengthCallback
