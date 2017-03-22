@@ -19,7 +19,7 @@ IOVal<Integer> ::= args::[String] ioIn::IO
     [ productDescription("dcv2", "length")
     , productDescription("dcv2", "errors")
     ]);
-  return ioval(run(cfg, callback, ioIn), 0);
+  return ioval(runMonto(cfg, callback, ioIn), 0);
 }
 
 global callbacks :: [Pair<String (Json ::= String String)>] =
