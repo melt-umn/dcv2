@@ -32,17 +32,17 @@ IOVal<Integer> ::= args::[String] ioIn::IO
 }
 
 function callback
-[Product] ::= req::Request
+[MontoMessage] ::= req::Request
 {
   local srcRqmt :: Requirement = head(req.requirements);
   return map(\p::Pair<String (Json ::= String String)> ->
-    product(
+    productMessage(product(
       srcRqmt.id,
       req.source,
       req.serviceId,
       p.fst,
       "dcv2",
-      p.snd(srcRqmt.contents, srcRqmt.source.physicalName)),
+      p.snd(srcRqmt.contents, srcRqmt.source.physicalName)).json),
     callbacks);
 }
 
