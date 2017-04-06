@@ -9,6 +9,7 @@ import lib:monto:helpers;
 
 global callbacks :: [Pair<String (Json ::= String String)>] =
   [ pair("errors", errorCallback)
+  , pair("highlighting", makeHighlightingCallback(parse))
   , pair("length", lengthCallback)
   ];
 
@@ -42,6 +43,6 @@ function callback
       req.serviceId,
       p.fst,
       "dcv2",
-      p.snd(srcRqmt.contents, srcRqmt.source.physicalName)).json),
+      p.snd(srcRqmt.contents, srcRqmt.source.physicalName))),
     callbacks);
 }
