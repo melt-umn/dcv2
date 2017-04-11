@@ -9,7 +9,7 @@ import lib:monto:helpers;
 
 global callbacks :: [Pair<String (Json ::= String String)>] =
   [ pair("errors", errorCallback)
-  , pair("highlighting", makeHighlightingCallback(parse, highlight))
+  , pair("highlighting", makeHighlightingCallback(parse))
   , pair("length", lengthCallback)
   ];
 

@@ -1,5 +1,7 @@
 grammar edu:umn:cs:melt:dcv2:concretesyntax;
 
+import lib:monto:helpers;
+
 lexer class COMMENT dominates OPERATOR;
 lexer class IDENTIFIER;
 lexer class KEYWORD dominates IDENTIFIER;
@@ -23,18 +25,18 @@ terminal Not_t              '!'  precedence = 1, association = left, lexer class
 terminal LParen_t '(';
 terminal RParen_t ')';
 
-terminal Let_t  'let'                                      lexer classes {KEYWORD};
+terminal Let_t  'let'                                      lexer classes {KEYWORD, MONTO_KEYWORD};
 terminal Bind_t '='                                        lexer classes {OPERATOR};
-terminal In_t   'in'   precedence = 0, association = left, lexer classes {KEYWORD};
-terminal If_t   'if'                                       lexer classes {KEYWORD};
-terminal Then_t 'then'                                     lexer classes {KEYWORD};
-terminal Else_t 'else'                                     lexer classes {KEYWORD};
-terminal End_t  'end'                                      lexer classes {KEYWORD};
+terminal In_t   'in'   precedence = 0, association = left, lexer classes {KEYWORD, MONTO_KEYWORD};
+terminal If_t   'if'                                       lexer classes {KEYWORD, MONTO_KEYWORD};
+terminal Then_t 'then'                                     lexer classes {KEYWORD, MONTO_KEYWORD};
+terminal Else_t 'else'                                     lexer classes {KEYWORD, MONTO_KEYWORD};
+terminal End_t  'end'                                      lexer classes {KEYWORD, MONTO_KEYWORD};
 
-terminal Identifier_t    /[A-Za-z][A-Za-z0-9]*/     lexer classes {IDENTIFIER};
-terminal Float_Literal_t /[\-]?[0-9]+([\.][0-9]*)?/ lexer classes {LITERAL};
-terminal False_t 'false' lexer classes {KEYWORD, LITERAL};
-terminal True_t 'true'   lexer classes {KEYWORD, LITERAL};
+terminal Identifier_t    /[A-Za-z][A-Za-z0-9]*/     lexer classes {IDENTIFIER, MONTO_IDENTIFIER};
+terminal Float_Literal_t /[\-]?[0-9]+([\.][0-9]*)?/ lexer classes {LITERAL, MONTO_LITERAL};
+terminal False_t 'false' lexer classes {KEYWORD, LITERAL, MONTO_LITERAL};
+terminal True_t 'true'   lexer classes {KEYWORD, LITERAL, MONTO_LITERAL};
 
 ignore terminal Whitespace_t   /[\n\r\t\ ]+/;
-ignore terminal LineComment_t  /[\-][\-].*/ lexer classes {COMMENT};
+ignore terminal LineComment_t  /[\-][\-].*/ lexer classes {COMMENT, MONTO_COMMENT};
