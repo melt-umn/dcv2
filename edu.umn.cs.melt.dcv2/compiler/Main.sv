@@ -9,6 +9,7 @@ import silver:langutil:pp with implode as ppImplode;
 parser parse::Root_c
 {
   edu:umn:cs:melt:dcv2:concretesyntax;
+  lib:monto:helpers;
 }
 
 function main
