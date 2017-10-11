@@ -1,7 +1,7 @@
 grammar edu:umn:cs:melt:dcv2:abstractsyntax;
 
 import silver:langutil;
-import silver:langutil:pp with implode as ppImplode;
+import silver:langutil:pp;
 
 nonterminal Root with env, errors, location, pp, value;
 nonterminal Expr with env, errors, location, pp, value;
@@ -199,7 +199,7 @@ top::Expr ::= ident::String value::Expr body::Expr
   value.env = top.env;
   body.env = pair(ident, value.value) :: top.env;
   top.errors = value.errors ++ body.errors;
-  top.pp = parens(concat([
+  top.pp = parens(ppConcat([
     text("let "),
     text(ident),
     text(" = "),
@@ -222,7 +222,7 @@ top::Expr ::= c::Expr t::Expr e::Expr
   -- TODO Enforce then and else having same type.
   top.errors = c.errors ++ t.errors ++ e.errors ++ typeErrors;
 
-  top.pp = parens(concat([
+  top.pp = parens(ppConcat([
     text("if "),
     c.pp,
     text(" then "),
@@ -238,7 +238,7 @@ top::Expr ::= c::Expr t::Expr e::Expr
 
 -- Literal and Identifier productions.
 
-abstract production identifier
+abstract production identifierExpr
 top::Expr ::= i::String
 {
   local binding::Maybe<Pair<String Value>> = find(\p::Pair<String Value> -> p.fst == i, top.env);
@@ -248,18 +248,10 @@ top::Expr ::= i::String
   top.value = binding.fromJust.snd;
 }
 
-abstract production boolLiteralExpr
-top::Expr ::= l::Boolean
+abstract production literalExpr
+top::Expr ::= v::Value
 {
   top.errors = [];
-  top.pp = text(toString(l));
-  top.value = booleanValue(l);
-}
-
-abstract production floatLiteralExpr
-top::Expr ::= l::String
-{
-  top.errors = [];
-  top.pp = text(l);
-  top.value = floatValue(toFloat(l));
+  top.pp = v.pp;
+  top.value = v;
 }

@@ -2,7 +2,7 @@ grammar edu:umn:cs:melt:dcv2:concretesyntax;
 
 import edu:umn:cs:melt:dcv2:abstractsyntax;
 import silver:langutil;
-import silver:langutil:pp with implode as ppImplode;
+import silver:langutil:pp;
 
 -- The root nonterminal and associated attributes.
 
@@ -129,7 +129,7 @@ concrete production let_c
 top::Expr_c ::= 'let' i::Identifier_t '=' value::Expr_c 'in' body::Expr_c
 {
   local ident::String = i.lexeme;
-  top.pp = parens(concat([
+  top.pp = parens(ppConcat([
     text("let "),
     text(ident),
     text(" = "),
@@ -142,7 +142,7 @@ top::Expr_c ::= 'let' i::Identifier_t '=' value::Expr_c 'in' body::Expr_c
 concrete production if_c
 top::Expr_c ::= 'if' c::Expr_c 'then' t::Expr_c 'else' e::Expr_c 'end'
 {
-  top.pp = parens(concat([
+  top.pp = parens(ppConcat([
     text("if "),
     c.pp,
     text(" then "),
@@ -159,26 +159,26 @@ concrete production identifier_c
 top::Expr_c ::= i::Identifier_t
 {
   top.pp = text(i.lexeme);
-  top.ast_Expr = identifier(i.lexeme, location=i.location);
+  top.ast_Expr = identifierExpr(i.lexeme, location=i.location);
 }
 
 concrete production true_c
 top::Expr_c ::= l::'true'
 {
   top.pp = text(l.lexeme);
-  top.ast_Expr = boolLiteralExpr(true, location=l.location);
+  top.ast_Expr = literalExpr(booleanValue(true), location=l.location);
 }
 
 concrete production false_c
 top::Expr_c ::= l::'false'
 {
   top.pp = text(l.lexeme);
-  top.ast_Expr = boolLiteralExpr(false, location=l.location);
+  top.ast_Expr = literalExpr(booleanValue(false), location=l.location);
 }
 
 concrete production float_literal_c
 top::Expr_c ::= l::Float_Literal_t
 {
   top.pp = text(l.lexeme);
-  top.ast_Expr = floatLiteralExpr(l.lexeme, location=l.location);
+  top.ast_Expr = literalExpr(floatValue(toFloat(l.lexeme)), location=l.location);
 }

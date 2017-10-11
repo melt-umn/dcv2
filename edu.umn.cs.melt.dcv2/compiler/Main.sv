@@ -4,7 +4,7 @@ import core:monad;
 import edu:umn:cs:melt:dcv2:abstractsyntax;
 import edu:umn:cs:melt:dcv2:concretesyntax;
 import silver:langutil;
-import silver:langutil:pp with implode as ppImplode;
+import silver:langutil:pp;
 
 parser parse::Root_c
 {

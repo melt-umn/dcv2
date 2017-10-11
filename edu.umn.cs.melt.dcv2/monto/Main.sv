@@ -4,45 +4,31 @@ import edu:umn:cs:melt:dcv2:abstractsyntax;
 import edu:umn:cs:melt:dcv2:compiler;
 import edu:umn:cs:melt:dcv2:concretesyntax;
 import lib:json;
-import lib:monto; 
+import silver:support:monto; 
+import silver:support:monto:negotiation; 
 import lib:monto:helpers;
-
-global callbacks :: [Pair<String (Json ::= String String)>] =
-  [ pair("errors", errorCallback)
-  , pair("highlighting", makeHighlightingCallback(parse, highlight))
-  , pair("length", lengthCallback)
-  ];
-
-function callbackPairToName
-ProductDescription ::= p::Pair<String (Json ::= String String)>
-{
-  return productDescription("dcv2", p.fst);
-}
 
 function main
 IOVal<Integer> ::= args::[String] ioIn::IO
 {
-  local cfg :: Config = config(
-    "127.0.0.1",
-    "edu.umn.cs.melt.dcv2",
-    "dcv2",
-    "A simple example language.",
-    [ sourceDependency("dcv2") ],
-    map(callbackPairToName, callbacks));
-  return ioval(runMonto(cfg, callback, ioIn), 0);
-}
-
-function callback
-[MontoMessage] ::= req::Request
-{
-  local srcRqmt :: Requirement = head(req.requirements);
-  return map(\p::Pair<String (Json ::= String String)> ->
-    productMessage(product(
-      srcRqmt.id,
-      req.source,
-      req.serviceId,
-      p.fst,
-      "dcv2",
-      p.snd(srcRqmt.contents, srcRqmt.source.physicalName))),
-    callbacks);
+  local sn :: ServiceNegotiation =
+    serviceNegotiation(
+      protocolVersion(3, 0, 0),
+      softwareVersion(
+        "edu.umn.cs.melt.dcv2.monto",
+        nothing(),
+        nothing(),
+        nothing(),
+        nothing(),
+        nothing()),
+      [],
+      []);
+  local svc :: Service =
+    service(sn, [{- TODO -}]);
+  local port :: Integer =
+    if listLength(args) == 1 then
+      toInt(head(args))
+    else
+      error("Usage: java -jar edu.umn.cs.melt.dcv2.monto <port>");
+  return ioval(runService(svc, port, ioIn), 0);
 }

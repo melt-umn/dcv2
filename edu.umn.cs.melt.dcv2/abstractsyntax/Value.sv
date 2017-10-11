@@ -1,18 +1,18 @@
 grammar edu:umn:cs:melt:dcv2:abstractsyntax;
 
 import silver:langutil;
-import silver:langutil:pp with implode as ppImplode;
+import silver:langutil:pp;
 
 nonterminal Value with pp;
 
-abstract production floatValue
-top::Value ::= val::Float
+abstract production booleanValue
+top::Value ::= val::Boolean
 {
   top.pp = text(toString(val));
 }
 
-abstract production booleanValue
-top::Value ::= val::Boolean
+abstract production floatValue
+top::Value ::= val::Float
 {
   top.pp = text(toString(val));
 }
