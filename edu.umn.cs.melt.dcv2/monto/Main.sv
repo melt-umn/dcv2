@@ -3,10 +3,10 @@ grammar edu:umn:cs:melt:dcv2:monto;
 import edu:umn:cs:melt:dcv2:abstractsyntax;
 import edu:umn:cs:melt:dcv2:compiler;
 import edu:umn:cs:melt:dcv2:concretesyntax;
-import lib:json;
+import silver:json;
 import silver:support:monto; 
 import silver:support:monto:negotiation; 
-import lib:monto:helpers;
+import silver:support:monto:products; 
 
 function main
 IOVal<Integer> ::= args::[String] ioIn::IO
@@ -22,9 +22,10 @@ IOVal<Integer> ::= args::[String] ioIn::IO
         nothing(),
         nothing()),
       [],
-      []);
+      [ productDescriptor("errors", "dcv2")
+      ]);
   local svc :: Service =
-    service(sn, [{- TODO -}]);
+    service(sn, [mkErrorProvider()]);
   local port :: Integer =
     if listLength(args) == 1 then
       toInt(head(args))

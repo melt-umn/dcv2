@@ -4,3 +4,8 @@ let baz = 0.03 in
 foo + bar + baz
 
 -- Should be 1.23
+
+-- cilk
+-- adt
+-- regex
+-- host
