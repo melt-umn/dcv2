@@ -31,10 +31,10 @@ terminal Then_t 'then'                                     lexer classes {KEYWOR
 terminal Else_t 'else'                                     lexer classes {KEYWORD};
 terminal End_t  'end'                                      lexer classes {KEYWORD};
 
-terminal Identifier_t    /[A-Za-z][A-Za-z0-9]*/     lexer classes {IDENTIFIER};
-terminal Float_Literal_t /[\-]?[0-9]+([\.][0-9]*)?/ lexer classes {LITERAL};
+terminal Identifier_t    /[A-Za-z][A-Za-z0-9]*/     lexer classes {IDENTIFIER}, named "an identifier";
+terminal Float_Literal_t /[\-]?[0-9]+([\.][0-9]*)?/ lexer classes {LITERAL}, named "a number";
 terminal False_t 'false' lexer classes {KEYWORD, LITERAL};
 terminal True_t 'true'   lexer classes {KEYWORD, LITERAL};
 
-ignore terminal Whitespace_t   /[\n\r\t\ ]+/;
-ignore terminal LineComment_t  /[\-][\-].*/ lexer classes {COMMENT};
+ignore terminal Whitespace_t   /[\n\r\t\ ]+/ named "whitespace";
+ignore terminal LineComment_t  /[\-][\-].*/ lexer classes {COMMENT}, named "a comment";
