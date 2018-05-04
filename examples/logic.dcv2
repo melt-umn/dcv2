@@ -1,3 +1,4 @@
 let x = false in
 let y = true in
+let z = false in
 (x || y) && !(x && y)
