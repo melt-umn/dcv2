@@ -1,6 +1,5 @@
-#!/bin/sh
+#!/bin/bash
 
-set -e;
+set -euxo pipefail
 
-silver $@ edu:umn:cs:melt:dcv2:compiler;
-silver $@ edu:umn:cs:melt:dcv2:monto;
+silver "$@" edu:umn:cs:melt:dcv2:compiler
