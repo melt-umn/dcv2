@@ -26,7 +26,7 @@ IOVal<Integer> ::= args::[String] ioIn::IO
         printM(result.parseErrors ++ "\n");
         return 2;
       } else {
-        ast::Root = result.parseTree.ast_Root;
+        ast::Root = result.parseTree.ast;
         printM("pp: " ++ ast.pp.result ++ "\n");
         if null(ast.errors) then {
           printM("value: " ++ ast.value.pp.result ++ "\n");
