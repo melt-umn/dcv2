@@ -1,4 +1,4 @@
-grammar edu:umn:cs:melt:dcv2:compiler;
+grammar edu:umn:cs:melt:dcv2:driver;
 
 import core:monad;
 import edu:umn:cs:melt:dcv2:abstractsyntax;

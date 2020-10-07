@@ -2,5 +2,5 @@
 !.gitignore
 
 build.xml
-edu.umn.cs.melt.dcv2.compiler.jar
-Parser_edu_umn_cs_melt_dcv2_compiler_parse.copperdump.html
+edu.umn.cs.melt.dcv2.driver.jar
+Parser_edu_umn_cs_melt_dcv2_driver_parse.copperdump.html
